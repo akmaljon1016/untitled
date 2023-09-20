@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:untitled/count_cubit/count_cubit.dart';
+import 'package:untitled/numberCubit/number_cubit.dart';
+import 'package:untitled/textCubit/text_cubit.dart';
 
 void main() {
   runApp(MaterialApp(
     home: BlocProvider(
-      create: (context) => CountCubit(),
+      create: (context) => NumberCubit(),
       child: MyApp(),
     ),
   ));
@@ -19,31 +20,54 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int son = 0;
+  TextEditingController txtController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Bloc"),
-      ),
-      body: Center(
-        child: BlocBuilder<CountCubit, CountState>(
-          builder: (context, state) {
-            if (state is CountInitial) {
-              return Text("0");
-            } else {
-              return Text((state as NumberChange).number.toString());
-            }
-          },
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          BlocProvider.of<CountCubit>(context).numberChange();
-        },
-        backgroundColor: Colors.green,
-        child: const Icon(Icons.add),
+      appBar: AppBar(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BlocBuilder<NumberCubit, NumberState>(
+            builder: (context, state) {
+              if (state is NumberInitial) {
+                return Text(
+                  "0",
+                  style: TextStyle(fontSize: 40),
+                );
+              } else if (state is NumberQoshish) {
+                return Text(state.number.toString(),
+                    style: TextStyle(fontSize: 40));
+              } else if (state is NumberAyrish) {
+                return Text(state.number.toString(),
+                    style: TextStyle(fontSize: 40));
+              } else {
+                return Text("Xato");
+              }
+            },
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              FloatingActionButton(
+                onPressed: () {
+                  BlocProvider.of<NumberCubit>(context).qoshish();
+                },
+                child: Icon(Icons.add),
+              ),
+              FloatingActionButton(
+                onPressed: () {
+                  BlocProvider.of<NumberCubit>(context).ayrish();
+                },
+                child: Icon(Icons.remove),
+              )
+            ],
+          )
+        ],
       ),
     );
   }
